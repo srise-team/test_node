@@ -1,0 +1,38 @@
+TEST 2:
+
+  1.Please join products table with users table (user_id is primary key in users table and user_id field is foreign key in projects table) use that for join code.
+  also Left Join categories table (cid is primary key in categories table and cid  field is foreign key in projects table) ..
+  
+  Do pagination - 2 rows in each page.Please do pagination in jquery code.Output should be in jquery not in refresh page
+  
+  Also Add sort by drop down .
+  1.) Recent Projects
+  2.) Order By Category Name ASC
+  3.) Order By Username Asc
+  4.) Order By Project Title Asc
+  
+  Default output should be in Recent Projects 
+  
+  
+  When user changed sort by option.Onchange write jquery to bring the result as lik user selected sort by option.One more thing pagination also works as like pagination
+
+ Output should be
+ 
+    
+    Project Title  Username  CategoryName 
+    
+    2.Do login form and create session for user table
+    
+    Use  username from users table.
+    
+    Username should match with user entered login form_username
+    
+    take salt field value from username match row (row)
+    
+    Password should match from users table md5(md5(form_password).row_salt))
+
+
+
+chad (3).sql
+
+

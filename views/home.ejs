@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ./partials/header %>
+    <link href="../lib/css/home.css" rel="stylesheet" />
+    <script src="../lib/js/popper.min.js"></script>
+    <script src="../lib/bootstrap/js/bootstrap.min.js"></script>    
+</head>
+<body>
+    
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+        <a class="navbar-brand" href="/">Logo</a>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                <span class="fa fa-user text-white"> <%= user.username %></span>
+            </a> 
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" href="/logout">Logout</a>
+            </div>           
+          </li> 
+        </ul>
+    </nav>
+
+    <div class="container main-board">       
+        <div class="card">
+            <div class="card-header h3">Project Table</div>
+            <div class="card-body">
+                <!-- project sort start -->
+                <div class="row">
+                    <div class="col-md-12 form-inline">
+                        <div class="form-group">
+                            <label for="sort">Project Sort: </label>
+                            <select name="sort" id="sort" class="form-control ml-5">
+                                <option value="recent">Recent Projects</option>
+                                <option value="category">Order By Category Name ASC</option>
+                                <option value="user">Order By User Name Asc</option>
+                                <option value="project">Order By Project Title Asc</option>
+                            </select>
+                        </div>
+                    </div>                    
+                </div>         
+                <!-- project sort end -->
+                <!-- table start -->
+                <div class="row mt-5">
+                    <div class="col-md-12">
+                        <table class="table table-hover">
+                            <thead>
+                                <th>Project Title</th>
+                                <th>User Name</th>
+                                <th>Category Name</th>
+                                <th class="d-none"></th>
+                            </thead>
+                            <tbody>
+                                <% rows.forEach(row => { %>
+                                <tr>
+                                    <td><%= row.project_title %></td>    
+                                    <td><%= row.username %></td>    
+                                    <td><%= row.category_name %></td>    
+                                    <td class="d-none"><%= +row.date_added %></td>    
+                                </tr>
+                                <% }); %>    
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- table end -->
+                <!-- pagination start -->
+                <div class="row mt-5 clearfix">
+                    <div class="col-md-12">
+                        <ul class="pagination d-flex justify-content-center">
+                        </ul>
+                    </div>
+                </div>
+                <!-- pagination end -->
+
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // var error = "<%= err %>";
+        ///////////////////////////pagination start///////////////////////////
+        $('.pagination').html('');
+        var maxRows = 2, trnum = 0, currentPageNum = 1;
+        var totalRows = $('table tbody tr').length;
+        $('table tr:gt(0)').each(function(){
+            trnum++;
+            if(trnum > maxRows) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        });
+        if(totalRows > maxRows) {
+            $('.pagination').append('<li class="page-item" id="previous"><span class="page-link">Previous</span></li>');
+            var pagenum = Math.ceil(totalRows / maxRows);
+            for(var i = 1; i <= pagenum;) {
+                $('.pagination').append('<li class="page-item" data-page="' + i + '"><span class="page-link">' + i++ + '</span></li>').show();
+            }
+            $('.pagination').append('<li class="page-item" id="next"><span class="page-link">Next</span></li>');
+        }
+        $('.pagination li:nth-child(2)').addClass('active');
+        $('.pagination li[data-page]').on('click', function(){
+            var pageNum = $(this).attr('data-page');
+            var trIndex = 0;
+            currentPageNum = pageNum;
+            $('.pagination li').removeClass('active');
+            $(this).addClass('active');
+            $('table tr:gt(0)').each(function() {
+                trIndex++;
+                if((trIndex > maxRows * pageNum) || trIndex <= ((maxRows * pageNum) - maxRows)) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            });
+        });
+        $('.pagination li#previous').on('click', function() {
+            if (currentPageNum > 1) {
+                var trIndex = 0;
+                --currentPageNum;
+                $('.pagination li').removeClass('active');
+                $('.pagination li:nth-child(' + (currentPageNum + 1) + ')').addClass('active');
+                $('table tr:gt(0)').each(function() {
+                    trIndex++;
+                    if((trIndex > maxRows * currentPageNum) || trIndex <= ((maxRows * currentPageNum) - maxRows)) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                });
+            }
+        });
+        $('.pagination li#next').on('click', function() {
+            var maxNum = Math.ceil(totalRows / maxRows);
+            if (currentPageNum < maxNum) {
+                var trIndex = 0;
+                ++currentPageNum;
+                $('.pagination li').removeClass('active');
+                $('.pagination li:nth-child(' + (currentPageNum + 1) + ')').addClass('active');
+                $('table tr:gt(0)').each(function() {
+                    trIndex++;
+                    if((trIndex > maxRows * currentPageNum) || trIndex <= ((maxRows * currentPageNum) - maxRows)) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                });
+            }
+        });
+        
+        ////////////////////////////pagination end//////////////////////
+        ///////////////////////////sorting start///////////////////////
+        var thIndex = 0,
+        curThIndex = null;
+
+        $(function(){
+            $('select').on('change', function(){
+                switch($(this).val()) {
+                    case "recent":
+                        thIndex = 3; break;
+                    case "user":
+                        thIndex = 1; break;
+                    case "category":
+                        thIndex = 2; break;
+                    case "project":
+                        thIndex = 0; break;
+                    default:
+                        thIndex = 0; break;
+                }
+
+                if(thIndex != curThIndex){
+                    curThIndex = thIndex;
+                    sorting = [];
+                    tbodyHtml = '';
+                    $('table tbody tr').each(function(){
+                        sorting.push($(this).children('td').eq(curThIndex).html() + ', ' + $(this).index());
+                    });
+                    sorting = sorting.sort();
+                    sortIt();
+                }
+            });
+        });
+
+        function sortIt(){
+            for(var sortingIndex = 0; sortingIndex < sorting.length; sortingIndex++){
+                rowId = parseInt(sorting[sortingIndex].split(', ')[1]);
+                tbodyHtml = tbodyHtml + $('table tbody tr').eq(rowId)[0].outerHTML;
+            }
+            $('table tbody').html(tbodyHtml);
+            $('.pagination li:nth-child(2)').trigger('click');
+        }
+        
+        $('select').trigger('change');
+        /////////////////////////////sorting end////////////////////////////////
+    </script>
+
+</body>
+</html>

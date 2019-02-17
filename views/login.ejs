@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ./partials/header %>
+    <link href="../lib/css/sign-in.css" rel="stylesheet" />
+</head>
+<body class="flex-row align-items-center">
+    <div class="container">
+        <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card p-4">
+                <div class="card-body">
+                <form class="form-signin" method="POST" action="/login">
+                    <h1>Login</h1>
+                    <p class="text-muted">Sign In to your account</p>
+                    <% if(message.length > 0) { %>
+                        <div class="alert alert-danger"><%= message %></div>
+                    <% } %>
+                    <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Username" name="username" required/>
+                    </div>
+                    <div class="input-group mb-4">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                    </div>
+                    <input type="password" class="form-control" placeholder="Password" name="password" required/>
+                    </div>   
+                    <div class="row">
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-primary px-4" (click)="login_click()">Login</button>
+                    </div>
+                    <div class="col-6 text-right">
+                        <button type="button" class="btn btn-link px-0" (click)="forgot_click()">Forgot password?</button>
+                    </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</body>
+</html>

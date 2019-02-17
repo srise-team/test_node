@@ -1,0 +1,24 @@
+body {
+    height: 100vh;
+    display: flex;
+}
+.main-board {
+    margin-top:80px;
+}
+
+
+.dropdown-menu {
+    padding: 0 0;
+    font-size: 0.875rem;
+    color: #23282c;
+    border: 1px solid #c8ced3;
+}
+
+.dropdown-item {
+    position: relative;
+    padding: 10px 20px;
+    border-bottom: 1px solid #c8ced3;
+}
+.dropdown-item:last-child {
+    border-bottom: 0;
+}
