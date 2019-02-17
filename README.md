@@ -7,3 +7,4 @@ Node.js and MySQL test
 3. npm install 
 4. npm start
 5. open browser http://localhost:3000
+6. test user name asas, password asas
